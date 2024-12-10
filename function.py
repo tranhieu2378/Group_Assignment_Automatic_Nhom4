@@ -214,9 +214,8 @@ def get_total_price(driver):
     total_text = total_element.text.strip()
     return int(total_text.replace(",", "").replace("đ", ""))
 
-
+# Nhập số lượng sản phẩm ngẫu nhiên
 def set_quantity(driver, min_value=1, max_value=20):
-    """Nhập số lượng sản phẩm ngẫu nhiên."""
     WebDriverWait(driver, 10).until(
         EC.visibility_of_element_located((By.NAME, "soluong"))
     )
@@ -226,12 +225,12 @@ def set_quantity(driver, min_value=1, max_value=20):
     soluong.send_keys(str(number))
     return number
 
+# Thêm sản phẩm vào giỏ hàng
 def add_to_cart(driver):
-    """Thêm sản phẩm vào giỏ hàng."""
     driver.find_element(By.NAME, "themgiohang").click()
 
+# Tìm kiếm và thêm sản phẩm vào giỏ hàng
 def search_and_add_product(driver, product):
-    """Tìm kiếm và thêm sản phẩm vào giỏ hàng."""
     search_box = driver.find_element(By.CLASS_NAME, "seach_product")
     search_box.clear()
     search_box.send_keys(product)
@@ -245,23 +244,22 @@ def search_and_add_product(driver, product):
     set_quantity(driver)
     add_to_cart(driver)
 
-    # Quay lại trang chủ để tìm sản phẩm khác
     driver.find_element(By.XPATH, "//a[@href='index.php']").click()
 
+
+# Chuyển tới giỏ hàng
 def navigate_to_cart(driver):
-    """Chuyển tới giỏ hàng."""
     driver.find_element(By.CLASS_NAME, "w3view-cart").click()
 
-
+# Tính tổng tiền các sản phẩm trong giỏ hàng
 def calculate_total_in_cart(driver):
-    """Tính tổng tiền các sản phẩm trong giỏ hàng."""
     rows = driver.find_elements(By.CSS_SELECTOR, "tbody.scrollable-body tr.rem1")
     calculated_total = 0
     for row in rows:
         calculated_total += get_total_price(row)
     return calculated_total
 
+# Lấy tổng tiền thanh toán từ giao diện
 def get_displayed_payment_total(driver):
-    """Lấy tổng tiền thanh toán từ giao diện."""
     payment_total_text = driver.find_element(By.CSS_SELECTOR, "td.col_tongthanhtoan span").text.strip()
     return int(payment_total_text.replace(",", "").replace("đ", ""))
